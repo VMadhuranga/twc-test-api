@@ -25,9 +25,10 @@ const updateContact = [
     .withMessage("Invalid email")
     .escape()
     .custom(async (value, { req }) => {
-      const contact = await ContactModel.findOne({ email: value })
-        .lean()
-        .exec();
+      const contact = await ContactModel.findOne({
+        email: value,
+        portalOwnerId: req.params.user_id,
+      });
 
       if (contact && contact._id.toString() !== req.params.contact_id) {
         throw new Error("Contact with this email already exists");
@@ -41,9 +42,10 @@ const updateContact = [
     .withMessage("Invalid phone number")
     .escape()
     .custom(async (value, { req }) => {
-      const contact = await ContactModel.findOne({ phoneNumber: value })
-        .lean()
-        .exec();
+      const contact = await ContactModel.findOne({
+        phoneNumber: value,
+        portalOwnerId: req.params.user_id,
+      });
 
       if (contact && contact._id.toString() !== req.params.contact_id) {
         throw new Error("Contact with this phone number already exists");
@@ -57,11 +59,21 @@ const updateContact = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
+    const paramsErrors = errors
+      .array()
+      .filter((error) => error.location === "params");
+    const bodyErrors = errors
+      .array()
+      .filter((error) => error.location === "body");
 
-    if (!errors.isEmpty()) {
+    if (paramsErrors.length > 0) {
+      return res.status(404).json({ message: "Resource not found" });
+    }
+
+    if (bodyErrors.length > 0) {
       return res
         .status(400)
-        .json({ message: "Validation error", data: errors.array() });
+        .json({ message: "Validation error", data: bodyErrors });
     }
 
     const updatedContact = new ContactModel({
