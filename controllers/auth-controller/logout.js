@@ -9,7 +9,7 @@ const logout = (req, res) => {
   res.clearCookie("jwt", {
     httpOnly: true,
     secure: true,
-    sameSite: "none",
+    sameSite: "strict",
   });
 
   res.json({ message: "Cookie cleared" });
