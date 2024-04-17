@@ -18,7 +18,7 @@ const createUser = [
   body("email")
     .trim()
     .isLength({ min: 1 })
-    .withMessage("Email name is required")
+    .withMessage("Email is required")
     .isEmail()
     .withMessage("Invalid email")
     .escape()
@@ -26,7 +26,7 @@ const createUser = [
       const user = await UserModel.findOne({ email: value }).lean().exec();
 
       if (user) {
-        throw new Error("User with email already exists");
+        throw new Error("User with this email already exists");
       }
     }),
   body("password")
