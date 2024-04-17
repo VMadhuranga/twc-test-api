@@ -61,26 +61,15 @@ const login = [
       });
     }
 
-    const accessToken = jwt.sign(
-      { userId: user._id.toString() },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "15m" },
-    );
+    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
-    const refreshToken = jwt.sign(
-      { userId: user._id.toString() },
-      process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "1d" },
-    );
-
-    res.cookie("jwt", refreshToken, {
+    res.cookie("jwt", accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 1 * 24 * 60 * 60 * 1000, // expires in 1 day
     });
 
-    res.json({ accessToken });
+    res.json({ userId: user._id });
   }),
 ];
 
