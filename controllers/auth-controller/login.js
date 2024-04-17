@@ -66,7 +66,7 @@ const login = [
     res.cookie("jwt", accessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "lax",
+      sameSite: "none",
     });
 
     res.json({ userId: user._id });
