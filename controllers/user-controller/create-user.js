@@ -34,7 +34,7 @@ const createUser = [
     .isLength({ min: 1 })
     .withMessage("Password is required")
     .isAlphanumeric()
-    .withMessage("Passwords must contain only letters and numbers")
+    .withMessage("Password must contain only letters and numbers")
     .escape(),
   body("confirm_password")
     .trim()
