@@ -18,7 +18,7 @@ const login = [
     .isLength({ min: 1 })
     .withMessage("Password is required")
     .isAlphanumeric()
-    .withMessage("Passwords must contain only letters and numbers")
+    .withMessage("Password must contain only letters and numbers")
     .escape(),
 
   asyncHandler(async (req, res, next) => {
